@@ -9,7 +9,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: ContadorCurtidas());
+    return MaterialApp(
+      home: ContadorCurtidas(),
+    );
   }
 }
 
@@ -42,30 +44,18 @@ class _ContadorCurtidasState extends State<ContadorCurtidas> {
             SizedBox(height: 20),
 
             Text(
-              "$curtidas curtidas",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
+            "$curtidas curtidas",
+              style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              ),
+          ),
 
             SizedBox(height: 20),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(onPressed: curtir, child: Text("Curtir")),
-
-                SizedBox(width: 15),
-
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      if (curtidas > 0) {
-                        curtidas--;
-                      }
-                    });
-                  },
-                  child: Text("Descurtir👍"),
-                ),
-              ],
+            ElevatedButton(
+              onPressed: curtir,
+              child: Text("Curtir"),
             ),
           ],
         ),

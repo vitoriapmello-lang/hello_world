@@ -51,7 +51,7 @@ class _ContadorCurtidasState extends State<ContadorCurtidas> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(onPressed: curtir, child: Text("Curtir")),
+                ElevatedButton(onPressed: curtir, child: Text("Curtir👍")),
 
                 SizedBox(width: 15),
 
@@ -63,7 +63,7 @@ class _ContadorCurtidasState extends State<ContadorCurtidas> {
                       }
                     });
                   },
-                  child: Text("Descurtir👍"),
+                  child: Text("Descurtir👎"),
                 ),
               ],
             ),

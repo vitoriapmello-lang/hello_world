@@ -26,7 +26,7 @@ class CreditCard extends StatelessWidget {
           width: 300,
           height: 200,
           decoration: const BoxDecoration(
-            color: Colors.purple,
+            color: Color.fromARGB(255, 52, 18, 58),
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           child: Padding(

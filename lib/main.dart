@@ -19,85 +19,214 @@ class CreditCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Meu Cartão'), centerTitle: true),
+      appBar:
+          AppBar(title: const Text('Carteira Digital'), centerTitle: true),
 
       body: Center(
-        child: Container(
-          width: 300,
-          height: 200,
-          decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 52, 18, 58),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Banco SESI / SENAI',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Icon(
-                      Icons.credit_card,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  '1234 5678 9012 3456',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: 300,
+                height: 180,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromARGB(255, 52, 18, 58),
+                      Color.fromARGB(255, 137, 72, 148),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
                 ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            'Banco SESI / SENAI',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Icon(Icons.credit_card,
+                              color: Colors.white, size: 30),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        '1234 5678 9012 3456',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                'Titular',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14),
+                              ),
+                              Text(
+                                'Vitória Pierre',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment:
+                                CrossAxisAlignment.end,
+                            children: const [
+                              Text(
+                                'Validade',
+                                style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 12),
+                              ),
+                              Text('05/33',
+                                  style:
+                                      TextStyle(color: Colors.white)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            Container(
+              width: 300,
+              height: 180,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromARGB(255, 18, 45, 58),
+                    Color.fromARGB(255, 76, 136, 210),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
                       children: const [
                         Text(
-                          'Titular',
-                          style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                        Text(
-                          'Vitória Pierre',
+                          'Banco SESI / SENAI',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                        Row(
+                          children: [
+                            Icon(Icons.sim_card,
+                                color: Colors.white, size: 20),
+                            SizedBox(width: 5),
+                            Icon(Icons.contactless,
+                                color: Colors.white, size: 20),
+                          ],
+                        ),
                       ],
                     ),
-
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: const [
-                        Text(
-                          'Validade',
-                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                    const SizedBox(height: 10),
+                    const Text(
+                      '1234 5678 9012 3456',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              'Titular',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14),
+                            ),
+                            Row(
+                              children: [
+                                Icon(Icons.person,
+                                    color: Colors.white, size: 18),
+                                SizedBox(width: 5),
+                                Text(
+                                  'Theodoro Silva',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        Text('12/25', style: TextStyle(color: Colors.white)),
+                        Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.end,
+                          children: const [
+                            Text(
+                              'Validade',
+                              style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12),
+                            ),
+                            Text('07/34',
+                                style:
+                                    TextStyle(color: Colors.white)),
+                          ],
+                        ),
                       ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

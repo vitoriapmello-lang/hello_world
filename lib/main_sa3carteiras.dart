@@ -146,7 +146,7 @@ class CreditCard extends StatelessWidget {
                           MainAxisAlignment.spaceBetween,
                       children: const [
                         Text(
-                          'Banco SESI / SENAI',
+                          'Rafisa Card',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,

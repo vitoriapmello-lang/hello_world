@@ -146,7 +146,7 @@ class CreditCard extends StatelessWidget {
                           MainAxisAlignment.spaceBetween,
                       children: const [
                         Text(
-                          'Rafisa Card',
+                          'Rafisa',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -250,7 +250,7 @@ class CreditCard extends StatelessWidget {
                           MainAxisAlignment.spaceBetween,
                       children: const [
                         Text(
-                          'Kilua Card',
+                          'Kilua',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,

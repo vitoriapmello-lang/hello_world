@@ -39,8 +39,8 @@ class CreditCard extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   gradient: LinearGradient(
                     colors: [
-                      Color.fromARGB(255, 52, 18, 58),
-                      Color.fromARGB(255, 137, 72, 148),
+                      Color.fromARGB(255, 53, 44, 179),
+                      Color.fromARGB(255, 115, 133, 172),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -131,7 +131,7 @@ class CreditCard extends StatelessWidget {
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 gradient: LinearGradient(
-                  colors: [Color.fromARGB(255, 94, 201, 218), Color.fromARGB(255, 11, 80, 94)],
+                  colors: [Color.fromARGB(255, 70, 27, 90), Color.fromARGB(255, 163, 0, 185)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -235,7 +235,7 @@ class CreditCard extends StatelessWidget {
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 gradient: LinearGradient(
-                  colors: [Color.fromARGB(255, 82, 8, 8), Color.fromARGB(255, 127, 35, 76)],
+                  colors: [Color.fromARGB(255, 225, 175, 211), Color.fromARGB(255, 126, 31, 91)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),

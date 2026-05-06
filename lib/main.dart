@@ -1,4 +1,3 @@
-// SingleChildScrollView (rolagem)
 import 'package:flutter/material.dart';
 
 void main() {

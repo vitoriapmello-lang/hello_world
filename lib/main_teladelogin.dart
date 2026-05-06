@@ -31,66 +31,62 @@ class TelaLogin extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Container(
-            width: largura,
-            height: altura,
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.lock,
-                  size: 80,
-                  color: Colors.blue,
-                ),
-
-                const SizedBox(height: 20),
-
-                const Text(
-                  "Bem-vindo",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: altura,
+            ),
+            child: Container(
+              width: largura,
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.lock,
+                    size: 80,
+                    color: Colors.blue,
                   ),
-                ),
-
-                const SizedBox(height: 30),
-
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: "E-mail",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: "Senha",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-
-                const SizedBox(height: 30),
-
-                OverflowBar(
-                  alignment: MainAxisAlignment.center,
-                  spacing: 15,
-                  overflowSpacing: 15,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text("Entrar"),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Bem-vindo",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
                     ),
-                    OutlinedButton(
-                      onPressed: () {},
-                      child: const Text("Cadastrar"),
+                  ),
+                  const SizedBox(height: 30),
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: "E-mail",
+                      border: OutlineInputBorder(),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: "Senha",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  OverflowBar(
+                    alignment: MainAxisAlignment.center,
+                    spacing: 15,
+                    overflowSpacing: 15,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Entrar"),
+                      ),
+                      OutlinedButton(
+                        onPressed: () {},
+                        child: const Text("Cadastrar"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -1,36 +1,78 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(ScrollApp());
+  runApp(MeuApp());
 }
 
-class ScrollApp extends StatelessWidget {
-  const ScrollApp({super.key});
-
+class MeuApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Exemplo Scroll',
-      home: Scaffold(
-        appBar:AppBar(
-          title: const Text("SingleChildScrollView"),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: List.generate(
-            20,
-            (index) => Container(
-              margin: const EdgeInsets.all(10),
-              height: 80,
-              color: Colors.green,
-              child: Center(
-                child: Text(
-                  "Item ${index + 1}",
-                  style: const TextStyle(color: Colors.white),
-                )
-              )
-            ))
-          ),
+      debugShowCheckedModeBanner: false,
+      home: TelaTeclados(),
+    );
+  }
+}
+
+class TelaTeclados extends StatelessWidget {
+  final nomeController = TextEditingController();
+  final emailController = TextEditingController();
+  final idadeController = TextEditingController();
+  final telefoneController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Exemplo de Teclados"),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+
+            TextField(
+              controller: nomeController,
+              keyboardType: TextInputType.name,
+              decoration: InputDecoration(
+                labelText: "Nome",
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+            SizedBox(height: 15),
+
+            TextField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                labelText: "Email",
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+            SizedBox(height: 15),
+
+            TextField(
+              controller: idadeController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: "Idade",
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+            SizedBox(height: 15),
+
+            TextField(
+              controller: telefoneController,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                labelText: "Telefone",
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
         ),
       ),
     );

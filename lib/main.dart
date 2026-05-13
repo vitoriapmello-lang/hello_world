@@ -72,6 +72,18 @@ class TelaTeclados extends StatelessWidget {
                 border: OutlineInputBorder(),
               ),
             ),
+
+            SizedBox(height: 30),
+
+            ElevatedButton(
+              onPressed: () {
+                print("Nome: ${nomeController.text}");
+                print("Email: ${emailController.text}");
+                print("Idade: ${idadeController.text}");
+                print("Telefone: ${telefoneController.text}");
+              },
+              child: Text("Enviar"),
+            ),
           ],
         ),
       ),

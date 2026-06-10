@@ -1,201 +1,301 @@
 import 'package:flutter/material.dart';
 
+// FUNÇÃO PRINCIPAL
 void main() {
+
+  // INICIA O APLICATIVO
   runApp(const MeuApp());
 }
 
+// CLASSE PRINCIPAL
 class MeuApp extends StatelessWidget {
+
   const MeuApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    // MATERIALAPP DEFINE A BASE DO APP
     return MaterialApp(
-      // REMOVE A FAIXA "DEBUG"
+
+      // REMOVE A FAIXA DEBUG
       debugShowCheckedModeBanner: false,
-      title: 'Listas Dinâmicas',
-      // TEMA DO APLICATIVO
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: const TelaListaDinamica(),
+
+      // TELA INICIAL
+      home: const TelaContatos(),
     );
   }
 }
 
 // STATEFULWIDGET
-// USAMOS QUANDO A TELA PRECISA ATUALIZAR
-class TelaListaDinamica extends StatefulWidget {
-  const TelaListaDinamica({super.key});
+// USADO QUANDO A TELA PRECISA ATUALIZAR
+class TelaContatos extends StatefulWidget {
+
+  const TelaContatos({super.key});
 
   @override
-  State<TelaListaDinamica> createState() =>
-      _TelaListaDinamicaState();
+  State<TelaContatos> createState() =>
+      _TelaContatosState();
 }
 
 // ESTADO DA TELA
-class _TelaListaDinamicaState
-    extends State<TelaListaDinamica> {
-  // CONTROLA O CAMPO DE TEXTO
-  // PERMITE PEGAR O QUE O USUÁRIO DIGITOU
-  final TextEditingController controller =
+class _TelaContatosState
+    extends State<TelaContatos> {
+
+  // CONTROLLER DO CAMPO NOME
+  final TextEditingController controllerNome =
       TextEditingController();
-  // LISTA DE TAREFAS
-  // CADA ITEM POSSUI:
-  // titulo
-  // concluida
-  List<Map<String, dynamic>> tarefas = [
 
-    {"titulo": "Estudar Flutter",
-      "concluida": false,},
+  // CONTROLLER DO CAMPO TELEFONE
+  final TextEditingController controllerTelefone =
+      TextEditingController();
 
-    {"titulo": "Fazer exercícios",
-      "concluida": false,},
+  // LISTA DE CONTATOS
+  List<Map<String, dynamic>> contatos = [
 
-    {"titulo": "Criar projeto",
-      "concluida": false,},
+    {
+      "nome": "João Silva",
+      "telefone": "99999-9999",
+    },
+
+    {
+      "nome": "Maria Oliveira",
+      "telefone": "98888-8888",
+    },
   ];
 
-  // FUNÇÃO PARA ADICIONAR NOVA TAREFA
-  void adicionarTarefa() {
-    if (controller.text.trim().isEmpty) {
+  // FUNÇÃO PARA ADICIONAR CONTATO
+  void adicionarContato() {
+
+    // VERIFICA SE OS CAMPOS ESTÃO VAZIOS
+    if (controllerNome.text.isEmpty ||
+        controllerTelefone.text.isEmpty) {
+
       return;
     }
+
+    // ATUALIZA A TELA
     setState(() {
-      tarefas.add({
-        "titulo": controller.text.trim(),
-        "concluida": false,
+
+      // ADICIONA NOVO CONTATO
+      contatos.add({
+
+        "nome": controllerNome.text,
+
+        "telefone":
+            controllerTelefone.text,
       });
-       });
-      
-      controller.clear();
-
-  }
-
-  // FUNÇÃO PARA REMOVER TAREFA
-  void removerTarefa(int index) {
-    setState(() {
-      tarefas.removeAt(index);
     });
 
+    // LIMPA OS CAMPOS
+    controllerNome.clear();
+    controllerTelefone.clear();
   }
 
-  // ALTERA O STATUS DO CHECKBOX
-  void alterarStatus(bool? valor, int index) {
+  // FUNÇÃO PARA REMOVER CONTATO
+  void removerContato(int index) {
+
+    // ATUALIZA A INTERFACE
     setState(() {
-      tarefas[index]["concluida"] = valor;
+
+      // REMOVE PELO ÍNDICE
+      contatos.removeAt(index);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
+    // SCAFFOLD É A ESTRUTURA DA TELA
     return Scaffold(
+
+      // APPBAR SUPERIOR
       appBar: AppBar(
-        title: const Text("Listas Dinâmicas"),
+
+        // TÍTULO
+        title: const Text(
+          "Lista de Contatos",
+        ),
+
+        // CENTRALIZA O TÍTULO
         centerTitle: true,
       ),
+
+      // CORPO DA TELA
       body: Padding(
+
+        // ESPAÇAMENTO
         padding: const EdgeInsets.all(16),
+
         child: Column(
           children: [
 
+            // CAMPO NOME
             TextField(
-              // CONTROLLER LIGADO AO CAMPO
-              controller: controller,
-              decoration: InputDecoration(
-                // TEXTO DE AJUDA
-                labelText: "Digite uma tarefa",
-                border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.circular(12),
-                ),
 
-                // ÍCONE DENTRO DO CAMPO
-                suffixIcon: IconButton(
-                  // ÍCONE "+"
-                  icon: const Icon(Icons.add),
-                  onPressed: adicionarTarefa,
+              // CONTROLLER
+              controller: controllerNome,
+
+              // DECORAÇÃO
+              decoration: InputDecoration(
+
+                // TEXTO
+                labelText: "Nome",
+
+                // ÍCONE
+                prefixIcon:
+                    const Icon(Icons.person),
+
+                // BORDA
+                border: OutlineInputBorder(
+
+                  // BORDA ARREDONDADA
+                  borderRadius:
+                      BorderRadius.circular(
+                          12),
                 ),
               ),
             ),
 
+            // ESPAÇO
+            const SizedBox(height: 10),
+
+            // CAMPO TELEFONE
+            TextField(
+
+              // CONTROLLER
+              controller:
+                  controllerTelefone,
+
+              decoration: InputDecoration(
+
+                // TEXTO
+                labelText: "Telefone",
+
+                // ÍCONE
+                prefixIcon:
+                    const Icon(Icons.phone),
+
+                // BORDA
+                border: OutlineInputBorder(
+
+                  borderRadius:
+                      BorderRadius.circular(
+                          12),
+                ),
+              ),
+            ),
+
+            // ESPAÇO
+            const SizedBox(height: 15),
+
+            // BOTÃO ADICIONAR
+            SizedBox(
+
+              // LARGURA TOTAL
+              width: double.infinity,
+
+              child: ElevatedButton.icon(
+
+                // AÇÃO
+                onPressed: adicionarContato,
+
+                // ÍCONE
+                icon: const Icon(Icons.add),
+
+                // TEXTO
+                label: const Text(
+                  "Adicionar Contato",
+                ),
+              ),
+            ),
+
+            // ESPAÇO
             const SizedBox(height: 20),
 
-            // TEXTO MOSTRANDO QUANTIDADE
+            // TEXTO TOTAL DE CONTATOS
             Text(
-              // INTERPOLAÇÃO
-              "Total de tarefas: ${tarefas.length}",
+
+              "Total de contatos: ${contatos.length}",
+
               style: const TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontWeight:
+                    FontWeight.bold,
               ),
             ),
 
+            // ESPAÇO
             const SizedBox(height: 10),
 
             // EXPANDED OCUPA O RESTANTE DA TELA
             Expanded(
-              // CRIA LISTA DINÂMICA
+
+              // LISTA DINÂMICA
               child: ListView.builder(
+
                 // QUANTIDADE DE ITENS
-                itemCount: tarefas.length,
+                itemCount: contatos.length,
+
                 // CRIA CADA ITEM
-                itemBuilder: (context, index) {
-                  // CARD CRIA UM BLOCO VISUAL
+                itemBuilder:
+                    (context, index) {
+
+                  // CARD
                   return Card(
+
                     // SOMBRA
                     elevation: 3,
-                    // ESPAÇO ENTRE OS CARDS
-                    margin: const EdgeInsets.only(
+
+                    // ESPAÇO ENTRE ITENS
+                    margin:
+                        const EdgeInsets.only(
                       bottom: 10,
                     ),
 
                     child: ListTile(
-                      // LADO ESQUERDO
-                      leading: Checkbox(
-                        // VALOR DO CHECKBOX
-                        value:
-                            tarefas[index]["concluida"],
 
-                        // AO ALTERAR
-                        onChanged: (valor) {
+                      // ÍCONE ESQUERDO
+                      leading: const CircleAvatar(
 
-                          // CHAMA FUNÇÃO
-                          alterarStatus(
-                              valor, index);
-                        },
+                        child:
+                            Icon(Icons.person),
                       ),
 
-                      // TEXTO PRINCIPAL
+                      // NOME
                       title: Text(
 
-                        // MOSTRA O TÍTULO
-                        tarefas[index]["titulo"],
+                        contatos[index]["nome"],
 
-                        style: TextStyle(
-
-                          fontSize: 18,
-
-                          // RISCA O TEXTO SE ESTIVER CONCLUÍDO
-                          decoration:
-                              tarefas[index]
-                                      ["concluida"]
-                                  ? TextDecoration
-                                      .lineThrough
-                                  : TextDecoration
-                                      .none,
+                        style:
+                            const TextStyle(
+                          fontWeight:
+                              FontWeight.bold,
                         ),
                       ),
 
-                      // BOTÃO DIREITO Deletar
+                      // TELEFONE
+                      subtitle: Text(
+                        contatos[index]
+                            ["telefone"],
+                      ),
+
+                      // BOTÃO EXCLUIR
                       trailing: IconButton(
+
+                        // ÍCONE
                         icon: const Icon(
                           Icons.delete,
+
                           color: Colors.red,
                         ),
+
+                        // AO CLICAR
                         onPressed: () {
 
-                          // REMOVE O ITEM
-                          removerTarefa(index);
+                          // REMOVE CONTATO
+                          removerContato(
+                              index);
                         },
                       ),
                     ),
@@ -207,10 +307,14 @@ class _TelaListaDinamicaState
         ),
       ),
 
-      // BOTÃO FLUTUANTE +
+      // BOTÃO FLUTUANTE
       floatingActionButton:
           FloatingActionButton(
-        onPressed: adicionarTarefa,
+
+        // AÇÃO
+        onPressed: adicionarContato,
+
+        // ÍCONE
         child: const Icon(Icons.add),
       ),
     );

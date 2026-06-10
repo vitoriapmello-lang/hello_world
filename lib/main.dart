@@ -1,180 +1,217 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MeuApp());
+  runApp(const MeuApp());
 }
 
 class MeuApp extends StatelessWidget {
+  const MeuApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    // MaterialApp inicia o aplicativo
-    return MaterialApp(home: TelaFormulario());
+    return MaterialApp(
+      // REMOVE A FAIXA "DEBUG"
+      debugShowCheckedModeBanner: false,
+      title: 'Listas Dinâmicas',
+      // TEMA DO APLICATIVO
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      home: const TelaListaDinamica(),
+    );
   }
 }
 
-class TelaFormulario extends StatefulWidget {
+// STATEFULWIDGET
+// USAMOS QUANDO A TELA PRECISA ATUALIZAR
+class TelaListaDinamica extends StatefulWidget {
+  const TelaListaDinamica({super.key});
+
   @override
-  _TelaFormularioState createState() => _TelaFormularioState();
+  State<TelaListaDinamica> createState() =>
+      _TelaListaDinamicaState();
 }
 
-class _TelaFormularioState extends State<TelaFormulario> {
-  // Controla o TextField do nome
-  final nomeController = TextEditingController();
+// ESTADO DA TELA
+class _TelaListaDinamicaState
+    extends State<TelaListaDinamica> {
+  // CONTROLA O CAMPO DE TEXTO
+  // PERMITE PEGAR O QUE O USUÁRIO DIGITOU
+  final TextEditingController controller =
+      TextEditingController();
+  // LISTA DE TAREFAS
+  // CADA ITEM POSSUI:
+  // titulo
+  // concluida
+  List<Map<String, dynamic>> tarefas = [
 
-  // Controla o TextField da idade
-  final idadeController = TextEditingController();
+    {"titulo": "Estudar Flutter",
+      "concluida": false,},
 
-  // Variável do DropdownButton
-  String sexo = 'Masculino';
+    {"titulo": "Fazer exercícios",
+      "concluida": false,},
 
-  // Variável do Switch
-  bool notificacoes = false;
+    {"titulo": "Criar projeto",
+      "concluida": false,},
+  ];
 
-  // Variável do Checkbox
-  bool temHabilitacao = false;
+  // FUNÇÃO PARA ADICIONAR NOVA TAREFA
+  void adicionarTarefa() {
+    if (controller.text.trim().isEmpty) {
+      return;
+    }
+    setState(() {
+      tarefas.add({
+        "titulo": controller.text.trim(),
+        "concluida": false,
+      });
+       });
+      
+      controller.clear();
 
-  // Variável da saída
-  String resultado = "";
+  }
 
-  // Variável da idade
-  int idade = 0;
+  // FUNÇÃO PARA REMOVER TAREFA
+  void removerTarefa(int index) {
+    setState(() {
+      tarefas.removeAt(index);
+    });
+
+  }
+
+  // ALTERA O STATUS DO CHECKBOX
+  void alterarStatus(bool? valor, int index) {
+    setState(() {
+      tarefas[index]["concluida"] = valor;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Barra superior
-      appBar: AppBar(title: Text("Formulário Simples")),
-
+      appBar: AppBar(
+        title: const Text("Listas Dinâmicas"),
+        centerTitle: true,
+      ),
       body: Padding(
-        padding: EdgeInsets.all(16),
-
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Campo de texto do nome
-            TextField(
-              controller: nomeController,
 
+            TextField(
+              // CONTROLLER LIGADO AO CAMPO
+              controller: controller,
               decoration: InputDecoration(
-                labelText: "Nome",
-                border: OutlineInputBorder(),
+                // TEXTO DE AJUDA
+                labelText: "Digite uma tarefa",
+                border: OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.circular(12),
+                ),
+
+                // ÍCONE DENTRO DO CAMPO
+                suffixIcon: IconButton(
+                  // ÍCONE "+"
+                  icon: const Icon(Icons.add),
+                  onPressed: adicionarTarefa,
+                ),
               ),
             ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 20),
 
-            // Campo de texto da idade
-            TextField(
-              controller: idadeController,
-
-              decoration: InputDecoration(
-                labelText: "Idade",
-                border: OutlineInputBorder(),
+            // TEXTO MOSTRANDO QUANTIDADE
+            Text(
+              // INTERPOLAÇÃO
+              "Total de tarefas: ${tarefas.length}",
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
-
-              keyboardType: TextInputType.number,
-
-              // Atualiza a idade automaticamente
-              onChanged: (valor) {
-                setState(() {
-                  idade = int.tryParse(valor) ?? 0;
-                });
-              },
             ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
-            // Menu de seleção
-            DropdownButton<String>(
-              value: sexo,
+            // EXPANDED OCUPA O RESTANTE DA TELA
+            Expanded(
+              // CRIA LISTA DINÂMICA
+              child: ListView.builder(
+                // QUANTIDADE DE ITENS
+                itemCount: tarefas.length,
+                // CRIA CADA ITEM
+                itemBuilder: (context, index) {
+                  // CARD CRIA UM BLOCO VISUAL
+                  return Card(
+                    // SOMBRA
+                    elevation: 3,
+                    // ESPAÇO ENTRE OS CARDS
+                    margin: const EdgeInsets.only(
+                      bottom: 10,
+                    ),
 
-              items: [
-                DropdownMenuItem(value: 'Masculino', child: Text('Masculino')),
+                    child: ListTile(
+                      // LADO ESQUERDO
+                      leading: Checkbox(
+                        // VALOR DO CHECKBOX
+                        value:
+                            tarefas[index]["concluida"],
 
-                DropdownMenuItem(value: 'Feminino', child: Text('Feminino')),
+                        // AO ALTERAR
+                        onChanged: (valor) {
 
-                DropdownMenuItem(value: 'Outro', child: Text('Outro')),
-              ],
+                          // CHAMA FUNÇÃO
+                          alterarStatus(
+                              valor, index);
+                        },
+                      ),
 
-              onChanged: (valor) {
-                setState(() {
-                  sexo = valor!;
-                });
-              },
-            ),
+                      // TEXTO PRINCIPAL
+                      title: Text(
 
-            SizedBox(height: 10),
+                        // MOSTRA O TÍTULO
+                        tarefas[index]["titulo"],
 
-            Row(
-              children: [
-                // Caixa de seleção
-                Checkbox(
-                  value: temHabilitacao,
+                        style: TextStyle(
 
-                  // Só permite clicar se idade >= 18
-                  onChanged: idade >= 18
-                      ? (valor) {
-                          setState(() {
-                            temHabilitacao = valor!;
-                          });
-                        }
-                      : null,
-                ),
+                          fontSize: 18,
 
-                Text("Possui habilitação"),
-              ],
-            ),
+                          // RISCA O TEXTO SE ESTIVER CONCLUÍDO
+                          decoration:
+                              tarefas[index]
+                                      ["concluida"]
+                                  ? TextDecoration
+                                      .lineThrough
+                                  : TextDecoration
+                                      .none,
+                        ),
+                      ),
 
-            SizedBox(height: 20),
+                      // BOTÃO DIREITO Deletar
+                      trailing: IconButton(
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                        onPressed: () {
 
-            ElevatedButton(
-              onPressed: () {
-                // PROCESSAMENTO
-                if (idade >= 18 && temHabilitacao) {
-                  resultado = "Pode dirigir";
-                } else {
-                  resultado = "Não pode dirigir";
-                }
-
-                // Atualiza a tela
-                setState(() {});
-
-                // Saída no console
-                print("Nome: ${nomeController.text}");
-                print("Idade: $idade");
-                print("Sexo: $sexo");
-                print("Notificações: $notificacoes");
-                print("Tem habilitação: $temHabilitacao");
-              },
-
-              child: Text("Mostrar Dados"),
-            ),
-
-            SizedBox(height: 20),
-
-
-            // SAÍDA
-            Text(resultado, style: TextStyle(fontSize: 20)),
-
-            SizedBox(height: 20),
-
-            Row(
-              children: [
-                // Botão liga/desliga
-                Switch(
-                  value: notificacoes,
-
-                  onChanged: (valor) {
-                    setState(() {
-                      notificacoes = valor;
-                    });
-                  },
-                ),
-
-                Text("Exemplo Switch"),
-              ],
+                          // REMOVE O ITEM
+                          removerTarefa(index);
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
+      ),
+
+      // BOTÃO FLUTUANTE +
+      floatingActionButton:
+          FloatingActionButton(
+        onPressed: adicionarTarefa,
+        child: const Icon(Icons.add),
       ),
     );
   }

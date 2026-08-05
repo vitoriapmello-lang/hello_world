@@ -1,5 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
+/// Formata um valor double como moeda brasileira, sem depender de pacotes externos.
+/// Ex: 1234.5 -> "R$ 1.234,50"
+String formatarMoeda(double valor) {
+  final negativo = valor < 0;
+  valor = valor.abs();
+  final partes = valor.toStringAsFixed(2).split('.');
+  String inteiro = partes[0];
+  final decimal = partes[1];
+
+  final buffer = StringBuffer();
+  int contador = 0;
+  for (int i = inteiro.length - 1; i >= 0; i--) {
+    buffer.write(inteiro[i]);
+    contador++;
+    if (contador % 3 == 0 && i != 0) {
+      buffer.write('.');
+    }
+  }
+  final inteiroFormatado = buffer.toString().split('').reversed.join();
+
+  return '${negativo ? '-' : ''}R\$ $inteiroFormatado,$decimal';
+}
+
+/// Formata uma data como dd/MM, sem depender de pacotes externos.
+String formatarDataCurta(DateTime data) {
+  final dia = data.day.toString().padLeft(2, '0');
+  final mes = data.month.toString().padLeft(2, '0');
+  return '$dia/$mes';
+}
 
 void main() {
   runApp(const MyApp());
@@ -90,7 +119,7 @@ class _HomePageState extends State<HomePage> {
     Transacao(
       id: '1',
       titulo: 'Salário de Julho',
-      valor: 1800,
+      valor: 1600.00,
       tipo: TipoTransacao.entrada,
       categoria: categoriasEntrada[0],
       data: DateTime.now().subtract(const Duration(days: 4)),
@@ -113,7 +142,7 @@ class _HomePageState extends State<HomePage> {
     ),
     Transacao(
       id: '4',
-      titulo: 'Curso Senac',
+      titulo: 'Curso',
       valor: 120,
       tipo: TipoTransacao.saida,
       categoria: categoriasSaida[3],
@@ -131,7 +160,7 @@ class _HomePageState extends State<HomePage> {
 
   double get _saldo => _totalEntradas - _totalSaidas;
 
-  final _formatoMoeda = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
+  int _abaSelecionada = 0;
 
   void _abrirFormulario({TipoTransacao? tipoInicial}) {
     showModalBottomSheet(
@@ -153,94 +182,310 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final transacoesOrdenadas = [..._transacoes]
-      ..sort((a, b) => b.data.compareTo(a.data));
+    final paginas = [_buildInicio(), _buildRelatorio(), _buildPerfil()];
 
     return Scaffold(
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: IndexedStack(index: _abaSelecionada, children: paginas),
+      ),
+      floatingActionButton: _abaSelecionada == 0
+          ? FloatingActionButton.extended(
+              onPressed: () => _abrirFormulario(),
+              backgroundColor: const Color(0xFF6C2BD9),
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('Nova transação'),
+            )
+          : null,
+      bottomNavigationBar: _buildMenuInferior(),
+    );
+  }
+
+  Widget _buildMenuInferior() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 16,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: BottomNavigationBar(
+          currentIndex: _abaSelecionada,
+          onTap: (index) => setState(() => _abaSelecionada = index),
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          selectedItemColor: const Color(0xFF6C2BD9),
+          unselectedItemColor: Colors.black38,
+          selectedLabelStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+          unselectedLabelStyle: const TextStyle(fontSize: 12),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_rounded),
+              label: 'Início',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.pie_chart_rounded),
+              label: 'Relatório',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_rounded),
+              label: 'Perfil',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInicio() {
+    final transacoesOrdenadas = [..._transacoes]
+      ..sort((a, b) => b.data.compareTo(a.data));
+
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Text(
+                      'Olá! Bem-vindo(a)',
+                      style: TextStyle(fontSize: 15, color: Colors.black54),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      'Seu resumo financeiro',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                CircleAvatar(
+                  radius: 22,
+                  backgroundColor: const Color(0xFF6C2BD9).withOpacity(0.15),
+                  child: const Icon(
+                    Icons.person_rounded,
+                    color: Color(0xFF6C2BD9),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(child: _buildSaldoCard()),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Transações',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '${_transacoes.length} itens',
+                  style: const TextStyle(color: Colors.black45),
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (transacoesOrdenadas.isEmpty)
+          const SliverToBoxAdapter(child: _EstadoVazio())
+        else
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final t = transacoesOrdenadas[index];
+              return _TransacaoTile(
+                transacao: t,
+                onRemover: () => _removerTransacao(t.id),
+              );
+            }, childCount: transacoesOrdenadas.length),
+          ),
+        const SliverToBoxAdapter(child: SizedBox(height: 100)),
+      ],
+    );
+  }
+
+  Widget _buildRelatorio() {
+    final categoriasComGasto = <String, double>{};
+    for (final t in _transacoes.where((t) => t.tipo == TipoTransacao.saida)) {
+      categoriasComGasto[t.categoria.nome] =
+          (categoriasComGasto[t.categoria.nome] ?? 0) + t.valor;
+    }
+    final totalGastos = categoriasComGasto.values.fold(0.0, (a, b) => a + b);
+    final entradas = categoriasComGasto.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+      children: [
+        const Text(
+          'Relatório',
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 4),
+        const Text(
+          'Para onde seu dinheiro está indo',
+          style: TextStyle(color: Colors.black54),
+        ),
+        const SizedBox(height: 20),
+        if (entradas.isEmpty)
+          const _EstadoVazio()
+        else
+          ...entradas.map((entry) {
+            final categoria = categoriasSaida.firstWhere(
+              (c) => c.nome == entry.key,
+              orElse: () => categoriasSaida.last,
+            );
+            final percentual = totalGastos == 0
+                ? 0.0
+                : entry.value / totalGastos;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.04),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Text(
-                          'Olá! 👋',
-                          style: TextStyle(fontSize: 15, color: Colors.black54),
+                        Icon(categoria.icone, color: categoria.cor, size: 20),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            categoria.nome,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14.5,
+                            ),
+                          ),
                         ),
-                        SizedBox(height: 2),
                         Text(
-                          'Seu resumo financeiro',
-                          style: TextStyle(
-                            fontSize: 22,
+                          formatarMoeda(entry.value),
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
+                            fontSize: 14.5,
                           ),
                         ),
                       ],
                     ),
-                    CircleAvatar(
-                      radius: 22,
-                      backgroundColor: const Color(
-                        0xFF6C2BD9,
-                      ).withOpacity(0.15),
-                      child: const Icon(
-                        Icons.person_rounded,
-                        color: Color(0xFF6C2BD9),
+                    const SizedBox(height: 10),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: LinearProgressIndicator(
+                        value: percentual,
+                        minHeight: 8,
+                        backgroundColor: const Color(0xFFF5F3FA),
+                        valueColor: AlwaysStoppedAnimation(categoria.cor),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(child: _buildSaldoCard()),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Transações',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    const SizedBox(height: 4),
                     Text(
-                      '${_transacoes.length} itens',
-                      style: const TextStyle(color: Colors.black45),
+                      '${(percentual * 100).toStringAsFixed(0)}% dos gastos',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.black45,
+                      ),
                     ),
                   ],
                 ),
               ),
+            );
+          }),
+      ],
+    );
+  }
+
+  Widget _buildPerfil() {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+      children: [
+        Center(
+          child: CircleAvatar(
+            radius: 44,
+            backgroundColor: const Color(0xFF6C2BD9).withOpacity(0.15),
+            child: const Icon(
+              Icons.person_rounded,
+              size: 44,
+              color: Color(0xFF6C2BD9),
             ),
-            if (transacoesOrdenadas.isEmpty)
-              const SliverToBoxAdapter(child: _EstadoVazio())
-            else
-              SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  final t = transacoesOrdenadas[index];
-                  return _TransacaoTile(
-                    transacao: t,
-                    formatoMoeda: _formatoMoeda,
-                    onRemover: () => _removerTransacao(t.id),
-                  );
-                }, childCount: transacoesOrdenadas.length),
-              ),
-            const SliverToBoxAdapter(child: SizedBox(height: 100)),
-          ],
+          ),
         ),
+        const SizedBox(height: 14),
+        const Center(
+          child: Text(
+            'Minha Conta',
+            style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(height: 28),
+        _itemPerfil(Icons.notifications_rounded, 'Notificações'),
+        _itemPerfil(Icons.lock_rounded, 'Segurança'),
+        _itemPerfil(Icons.category_rounded, 'Categorias'),
+        _itemPerfil(Icons.dark_mode_rounded, 'Aparência'),
+        _itemPerfil(Icons.help_rounded, 'Ajuda e suporte'),
+        _itemPerfil(Icons.logout_rounded, 'Sair', cor: const Color(0xFFC53030)),
+      ],
+    );
+  }
+
+  Widget _itemPerfil(IconData icone, String label, {Color? cor}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _abrirFormulario(),
-        backgroundColor: const Color(0xFF6C2BD9),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('Nova transação'),
+      child: ListTile(
+        leading: Icon(icone, color: cor ?? const Color(0xFF6C2BD9)),
+        title: Text(
+          label,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: cor ?? Colors.black87,
+          ),
+        ),
+        trailing: Icon(
+          Icons.chevron_right_rounded,
+          color: Colors.black.withOpacity(0.3),
+        ),
+        onTap: () {},
       ),
     );
   }
@@ -275,7 +520,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 6),
             Text(
-              _formatoMoeda.format(_saldo),
+              formatarMoeda(_saldo),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 32,
@@ -290,7 +535,7 @@ class _HomePageState extends State<HomePage> {
                     icone: Icons.arrow_downward_rounded,
                     corIcone: Colors.greenAccent.shade100,
                     label: 'Entradas',
-                    valor: _formatoMoeda.format(_totalEntradas),
+                    valor: formatarMoeda(_totalEntradas),
                   ),
                 ),
                 Container(width: 1, height: 34, color: Colors.white24),
@@ -299,7 +544,7 @@ class _HomePageState extends State<HomePage> {
                     icone: Icons.arrow_upward_rounded,
                     corIcone: Colors.redAccent.shade100,
                     label: 'Saídas',
-                    valor: _formatoMoeda.format(_totalSaidas),
+                    valor: formatarMoeda(_totalSaidas),
                   ),
                 ),
               ],
@@ -364,14 +609,9 @@ class _MiniResumo extends StatelessWidget {
 
 class _TransacaoTile extends StatelessWidget {
   final Transacao transacao;
-  final NumberFormat formatoMoeda;
   final VoidCallback onRemover;
 
-  const _TransacaoTile({
-    required this.transacao,
-    required this.formatoMoeda,
-    required this.onRemover,
-  });
+  const _TransacaoTile({required this.transacao, required this.onRemover});
 
   @override
   Widget build(BuildContext context) {
@@ -432,7 +672,7 @@ class _TransacaoTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${transacao.categoria.nome} • ${DateFormat('dd/MM').format(transacao.data)}',
+                    '${transacao.categoria.nome} • ${formatarDataCurta(transacao.data)}',
                     style: const TextStyle(
                       fontSize: 12.5,
                       color: Colors.black45,
@@ -442,7 +682,7 @@ class _TransacaoTile extends StatelessWidget {
               ),
             ),
             Text(
-              '${isEntrada ? '+' : '-'} ${formatoMoeda.format(transacao.valor)}',
+              '${isEntrada ? '+' : '-'} ${formatarMoeda(transacao.valor)}',
               style: TextStyle(
                 fontSize: 14.5,
                 fontWeight: FontWeight.bold,

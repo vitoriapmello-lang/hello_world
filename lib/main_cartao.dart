@@ -89,7 +89,7 @@ class CartaoComBandeira extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         gradient: LinearGradient(
-          colors: [cor, cor.withOpacity(0.6)],
+          colors: [cor, cor.withValues(alpha: 0.6)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -180,7 +180,7 @@ class CartaoComIcones extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         gradient: LinearGradient(
-          colors: [cor, cor.withOpacity(0.6)],
+          colors: [cor, cor.withValues(alpha: 0.6)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

@@ -1,47 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(const MaterialApp(home: TelaPrincipal()));
-
-class TelaPrincipal extends StatefulWidget {
-  const TelaPrincipal({super.key});
-  @override
-  State<TelaPrincipal> createState() => _TelaPrincipalState();
+void main() {
+  runApp(const MyApp());
 }
 
-class _TelaPrincipalState extends State<TelaPrincipal> {
-  String textoNaTela = "Memória Vazia";
-
-  // 1. FUNÇÃO PARA SALVAR (Igualzinho ao seu slide)
-  void salvar() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    setState(() {
-      textoNaTela = prefs.getString('cidade') ?? "Não encontrado";
-    });
-  }
-
-  // 2. FUNÇÃO PARA LER (Igualzinho ao seu slide)
-  void ler() async {
-    final prefs = await SharedPreferences.getInstance();
-    
-    setState(() {
-      textoNaTela = prefs.getString('cidade') ?? "Não encontrado";
-    });
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(textoNaTela, style: const TextStyle(fontSize: 24)),
-            const SizedBox(height: 20),
-            ElevatedButton(onPressed: salvar, child: const Text("1. Salvar 'Leonardo'")),
-            ElevatedButton(onPressed: ler, child: const Text("2. Ler da Memória")),
-          ],
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: Text("minha tela")),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.thumb_up, size: 60),
+
+              Text(
+                "D.S é o melhor curso do SESI?",
+                style: TextStyle(fontSize: 22, color: Colors.blueAccent),
+              ),
+
+              ElevatedButton(
+                onPressed: () {
+                  print("usuario clicou");
+                },
+                child: Text("curtir"),
+              ),
+            ],
+          ),
         ),
       ),
     );

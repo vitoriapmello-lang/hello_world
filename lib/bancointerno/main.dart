@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'bancointerno/tarefa.dart';
-import 'bancointerno/database_helper.dart';
+import 'tarefa.dart';
+import 'database_helper.dart';
 
 void main() {
   runApp(const MeuAplicativo());
@@ -43,6 +43,7 @@ class _TarefasPageState extends State<TarefasPage> {
   @override
   void initState() {
     super.initState();
+
     carregarTarefas();
   }
 
@@ -111,12 +112,10 @@ class _TarefasPageState extends State<TarefasPage> {
           // FORMULÁRIO
           Padding(
             padding: const EdgeInsets.all(16),
-
             child: Column(
               children: [
                 TextField(
                   controller: descricaoController,
-
                   decoration: const InputDecoration(
                     labelText: 'Descrição da tarefa',
                     border: OutlineInputBorder(),
@@ -127,20 +126,15 @@ class _TarefasPageState extends State<TarefasPage> {
 
                 DropdownButtonFormField<String>(
                   value: prioridadeSelecionada,
-
                   decoration: const InputDecoration(
                     labelText: 'Prioridade',
                     border: OutlineInputBorder(),
                   ),
-
                   items: const [
                     DropdownMenuItem(value: 'Baixa', child: Text('Baixa')),
-
                     DropdownMenuItem(value: 'Média', child: Text('Média')),
-
                     DropdownMenuItem(value: 'Alta', child: Text('Alta')),
                   ],
-
                   onChanged: (valor) {
                     if (valor != null) {
                       setState(() {
@@ -154,10 +148,8 @@ class _TarefasPageState extends State<TarefasPage> {
 
                 SizedBox(
                   width: double.infinity,
-
                   child: ElevatedButton(
                     onPressed: adicionarTarefa,
-
                     child: const Text('ADICIONAR TAREFA'),
                   ),
                 ),
@@ -173,7 +165,6 @@ class _TarefasPageState extends State<TarefasPage> {
                 ? const Center(child: Text('Nenhuma tarefa cadastrada.'))
                 : ListView.builder(
                     itemCount: tarefas.length,
-
                     itemBuilder: (context, index) {
                       final tarefa = tarefas[index];
 
@@ -188,7 +179,6 @@ class _TarefasPageState extends State<TarefasPage> {
 
                           title: Text(
                             tarefa.descricao,
-
                             style: TextStyle(
                               decoration: tarefa.status == 'Concluída'
                                   ? TextDecoration.lineThrough
@@ -205,26 +195,21 @@ class _TarefasPageState extends State<TarefasPage> {
 
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
-
                             children: [
-                              // CONCLUIR
+                              // Concluir
                               if (tarefa.status != 'Concluída')
                                 IconButton(
                                   icon: const Icon(Icons.check),
-
                                   tooltip: 'Concluir',
-
                                   onPressed: () {
                                     concluirTarefa(tarefa);
                                   },
                                 ),
 
-                              // EXCLUIR
+                              // Excluir
                               IconButton(
                                 icon: const Icon(Icons.delete),
-
                                 tooltip: 'Excluir',
-
                                 onPressed: () {
                                   excluirTarefa(tarefa.id!);
                                 },

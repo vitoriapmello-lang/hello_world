@@ -17,15 +17,11 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
-    final caminho = join(
-      await getDatabasesPath(),
-      'tarefas.db',
-    );
+    final caminho = join(await getDatabasesPath(), 'tarefas.db');
 
     return await openDatabase(
       caminho,
       version: 1,
-
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE tarefas(
@@ -43,23 +39,34 @@ class DatabaseHelper {
   Future<int> inserirTarefa(Tarefa tarefa) async {
     final db = await database;
 
-    return await db.insert(
-      'tarefas',
-      tarefa.toMap(),
-    );
+    return await db.insert('tarefas', tarefa.toMap());
   }
 
   // READ
   Future<List<Tarefa>> listarTarefas() async {
     final db = await database;
 
-    final resultado = await db.query(
-      'tarefas',
-      orderBy: 'id DESC',
-    );
+    final resultado = await db.query('tarefas', orderBy: 'id DESC');
 
-    return resultado
-        .map((map) => Tarefa.fromMap(map))
-        .toList();
+    return resultado.map((map) => Tarefa.fromMap(map)).toList();
+  }
+
+  // UPDATE
+  Future<int> atualizarTarefa(Tarefa tarefa) async {
+    final db = await database;
+
+    return await db.update(
+      'tarefas',
+      tarefa.toMap(),
+      where: 'id = ?',
+      whereArgs: [tarefa.id],
+    );
+  }
+
+  // DELETE
+  Future<int> deletarTarefa(int id) async {
+    final db = await database;
+
+    return await db.delete('tarefas', where: 'id = ?', whereArgs: [id]);
   }
 }
